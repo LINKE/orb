@@ -136,8 +136,8 @@ module.exports.FilterPanel = react.createClass({
 			</tr>
 			<tr className="bottom-row">
 				<td className="cnfrm-btn-col" colSpan="2">
-					<input type="button" className={buttonClass} value="Ok" style={{ float: 'left' }}/>
-					<input type="button" className={buttonClass} value="Cancel" style={{ float: 'left' }}/>
+					<input type="button" className={buttonClass} value="Ok" style={{ 'float': 'left' }}/>
+					<input type="button" className={buttonClass} value="Cancel" style={{ 'float': 'left' }}/>
 				</td>
 				<td className="resize-col">
 					<div></div>

@@ -90,6 +90,8 @@ module.exports.PivotCell = react.createClass({
     switch(cell.template) {
       case 'cell-template-row-header':
       case 'cell-template-column-header':
+        //console.log(cell.value, cell)
+        value = (cell.datafield && cell.datafield.formatFunc) ? cell.datafield.formatFunc()(cell.value) : cell.value;
         var isWrapper = cell.type === uiheaders.HeaderType.WRAPPER && cell.dim.field.subTotal.visible && cell.dim.field.subTotal.collapsible;
         var isSubtotal = cell.type === uiheaders.HeaderType.SUB_TOTAL && !cell.expanded;
         if(isWrapper || isSubtotal) {
@@ -98,16 +100,18 @@ module.exports.PivotCell = react.createClass({
           divcontent.push(<table key="header-value" ref="cellContent">
             <tbody>
             <tr><td className="orb-tgl-btn"><div className={'orb-tgl-btn-' + (isWrapper ? 'down' : 'right')} onClick={(isWrapper ? this.collapse : this.expand)}></div></td>
-            <td className="hdr-val"><div dangerouslySetInnerHTML={{__html: cell.value || '&#160;'}}></div></td></tr>
+            <td className="hdr-val"><div dangerouslySetInnerHTML={{__html: '' + value || '&#160;'}}></div></td></tr>
             </tbody></table>);
         } else {
-          value = (cell.value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' Total' : '');
+          //value = ('' + cell.value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' Total' : '');
+          value = ('' + value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' 小计' : '');
         }
         break;
       case 'cell-template-dataheader':
         value = cell.value.caption;
         break;
       case 'cell-template-datavalue':
+        //console.info(cell.value, cell)
         value = (cell.datafield && cell.datafield.formatFunc) ? cell.datafield.formatFunc()(cell.value) : cell.value;
         cellClick = function() {
           self.props.pivotTableComp.pgridwidget.drilldown(cell, self.props.pivotTableComp.id);

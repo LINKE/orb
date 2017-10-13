@@ -14,7 +14,7 @@ var uiheaders = require('./orb.ui.header');
 var uirows = require('./orb.ui.rows');
 var uicols = require('./orb.ui.cols');
 //var React = require('react');
-//var OrbReactComps = require('./react/orb.react.compiled');
+var OrbReactComps = require('./react/orb.react.compiled');
 /**
  * Creates a new instance of pivot grid control
  * @class
@@ -25,8 +25,8 @@ module.exports = function(config) {
 
     var self = this;
     var renderElement;
-    //var pivotComponent;
-    //var dialog = OrbReactComps.Dialog.create();
+    var pivotComponent;
+    var dialog = OrbReactComps.Dialog.create();
 
     /**
      * Parent pivot grid
@@ -105,7 +105,7 @@ module.exports = function(config) {
     this.refreshData = function(data) {
         self.pgrid.refreshData(data);
         buildUi();
-        //pivotComponent.setProps({});
+        pivotComponent.setProps({});
     };
 
     this.applyFilter = function(fieldname, operator, term, staticValue, excludeStatic) {
@@ -155,67 +155,63 @@ module.exports = function(config) {
     };
 
     this.changeTheme = function(newTheme) {
-        //pivotComponent.changeTheme(newTheme);
+        pivotComponent.changeTheme(newTheme);
     };
 
     this.render = function(element) {
         renderElement = element;
-//        if(renderElement) {
-//            var pivotTableFactory = React.createFactory(OrbReactComps.PivotTable);
-//            var pivottable = pivotTableFactory({
-//                pgridwidget: self
-//            });
-//
-//            pivotComponent = React.render(pivottable, element);
-//        }
+        if(renderElement) {
+            var pivotTableFactory = React.createFactory(OrbReactComps.PivotTable);
+            var pivottable = pivotTableFactory({
+                pgridwidget: self
+            });
+
+            pivotComponent = React.render(pivottable, element);
+        }
     };
 
     this.drilldown = function(dataCell, pivotId) {
-//        if(dataCell) {
-//            var colIndexes = dataCell.columnDimension.getRowIndexes();
-//            var data = dataCell.rowDimension.getRowIndexes().filter(function(index) {
-//                return colIndexes.indexOf(index) >= 0;
-//            }).map(function(index) {
-//                return self.pgrid.filteredDataSource[index];
-//            });
-//
-//            var title;
-//            if(dataCell.rowType === uiheaders.HeaderType.GRAND_TOTAL && dataCell.colType === uiheaders.HeaderType.GRAND_TOTAL) {
-//                title = 'Grand total';
-//            } else {
-//                if(dataCell.rowType === uiheaders.HeaderType.GRAND_TOTAL) {
-//                    title = dataCell.columnDimension.value + '/Grand total ';
-//                } else if(dataCell.colType === uiheaders.HeaderType.GRAND_TOTAL) {
-//                    title = dataCell.rowDimension.value + '/Grand total ';
-//                } else {
-//                    title = dataCell.rowDimension.value + '/' + dataCell.columnDimension.value;
-//                }
-//            }
-//
-////            var pivotStyle = window.getComputedStyle( pivotComponent.getDOMNode(), null );
-////
-////            dialog.show({
-////                title: title,
-////                comp: {
-////                    type: OrbReactComps.Grid,
-////                    props: {                    
-////                        headers: self.pgrid.config.getDataSourceFieldCaptions(),
-////                        data: data,
-////                        theme: self.pgrid.config.theme
-////                    }
-////                },
-////                theme: self.pgrid.config.theme,
-////                style: {
-////                    fontFamily: pivotStyle.getPropertyValue('font-family'),
-////                    fontSize: pivotStyle.getPropertyValue('font-size')
-////                }
-////            });
-//        }
-    };
+        if(dataCell) {
+            var colIndexes = dataCell.columnDimension.getRowIndexes();
+            var data = dataCell.rowDimension.getRowIndexes().filter(function(index) {
+                return colIndexes.indexOf(index) >= 0;
+            }).map(function(index) {
+                return self.pgrid.filteredDataSource[index];
+            });
 
-    //this.excelExport = function() {
-    //    return OrbReactComps.Export.excelExport(this);
-    //};
+            var title;
+            if(dataCell.rowType === uiheaders.HeaderType.GRAND_TOTAL && dataCell.colType === uiheaders.HeaderType.GRAND_TOTAL) {
+                title = 'Grand total';
+            } else {
+                if(dataCell.rowType === uiheaders.HeaderType.GRAND_TOTAL) {
+                    title = dataCell.columnDimension.value + '/Grand total ';
+                } else if(dataCell.colType === uiheaders.HeaderType.GRAND_TOTAL) {
+                    title = dataCell.rowDimension.value + '/Grand total ';
+                } else {
+                    title = dataCell.rowDimension.value + '/' + dataCell.columnDimension.value;
+                }
+            }
+
+            var pivotStyle = window.getComputedStyle( pivotComponent.getDOMNode(), null );
+
+            dialog.show({
+                title: title,
+                comp: {
+                    type: OrbReactComps.Grid,
+                    props: {                    
+                        headers: self.pgrid.config.getDataSourceFieldCaptions(),
+                        data: data,
+                        theme: self.pgrid.config.theme
+                    }
+                },
+                theme: self.pgrid.config.theme,
+                style: {
+                    fontFamily: pivotStyle.getPropertyValue('font-family'),
+                    fontSize: pivotStyle.getPropertyValue('font-size')
+                }
+            });
+        }
+    };
 
     buildUi();
 

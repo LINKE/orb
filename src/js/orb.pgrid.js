@@ -103,7 +103,7 @@ module.exports = function(config) {
                     values1.push(val);
                 }
             } else {
-                if(val) {
+                if(val !== undefined) {
                     values1.push(val);
                 } else {
                     containsBlank = true;

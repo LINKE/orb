@@ -68,6 +68,9 @@ module.exports.Toolbar = react.createClass({
 });
 
 var excelExport = require('../orb.export.excel');
+//module.exports.Export = {
+//    'excelExport': excelExport
+//};
 
 var defaultToolbarConfig = {
   exportToExcel: function(pgridComponent, button) {
@@ -170,5 +173,5 @@ defaultToolbarConfig.buttons = [
                                                            action: defaultToolbarConfig.toggleGrandtotal(axe.Type.COLUMNS)},
   { type: 'separator'},
   { type: 'label', text: 'Export:'},
-  { type: 'button', tooltip: 'Export to Excel', cssClass: 'export-xls', action: defaultToolbarConfig.exportToExcel},
+  { type: 'button', tooltip: 'Export to Excel', cssClass: 'export-xls', action: defaultToolbarConfig.exportToExcel}
 ];

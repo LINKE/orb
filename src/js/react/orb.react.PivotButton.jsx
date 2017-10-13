@@ -37,6 +37,7 @@ module.exports.PivotButton = react.createClass({
         filterContainer.className = this.props.pivotTableComp.pgrid.config.theme.getFilterClasses().container;
         filterContainer.style.top = filterButtonPos.y + 'px';
         filterContainer.style.left = filterButtonPos.x + 'px';
+        filterContainer.style.zIndex = 1;
         document.body.appendChild(filterContainer);
 
         React.render(filterPanel, filterContainer);
@@ -80,7 +81,7 @@ module.exports.PivotButton = react.createClass({
 				mousedown: true,
 				mouseoffset: {
 					x: thispos.x - e.pageX,
-					y: thispos.y - e.pageY,
+					y: thispos.y - e.pageY
 				},
 				startpos: {
 					x: e.pageX,

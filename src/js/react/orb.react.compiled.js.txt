@@ -225,21 +225,17 @@ module.exports.PivotTable = react.createClass({
         // Set rowHeadersTable cells widths
         reactUtils.updateTableColGroup(nodes.rowHeadersTable.node, nodes.rowHeadersTable.widthArray);
 
-        try {
-            nodes.dataCellsTable.node.style.width = dataCellsTableMaxWidth + 'px';
-            nodes.colHeadersTable.node.style.width = dataCellsTableMaxWidth + 'px';
-            nodes.rowHeadersTable.node.style.width = rowHeadersTableWidth + 'px';
-        } catch (e) {}
+        nodes.dataCellsTable.node.style.width = dataCellsTableMaxWidth + 'px';
+        nodes.colHeadersTable.node.style.width = dataCellsTableMaxWidth + 'px';
+        nodes.rowHeadersTable.node.style.width = rowHeadersTableWidth + 'px';
 
         var dataCellsContainerWidth = Math.min(
             dataCellsTableMaxWidth + 1,
             nodes.pivotContainer.size.width - rowHeadersTableWidth - nodes.verticalScrollBar.size.width);
 
         // Adjust data cells container width
-        try {
-            nodes.dataCellsContainer.node.style.width = dataCellsContainerWidth + 'px';
-            nodes.colHeadersContainer.node.style.width = dataCellsContainerWidth + 'px';
-        } catch (e) {}
+        nodes.dataCellsContainer.node.style.width = dataCellsContainerWidth + 'px';
+        nodes.colHeadersContainer.node.style.width = dataCellsContainerWidth + 'px';
 
         var pivotContainerHeight = this.pgridwidget.pgrid.config.height;
 
@@ -602,17 +598,17 @@ function setTableWidths(tblObject, newWidthArray) {
 }
 
 function clearTableWidths(tbl) {
-    if (tbl) {
-        for (var rowIndex = 0; rowIndex < tbl.rows.length; rowIndex++) {
-            var row = tbl.rows[rowIndex];
-            for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
-                row.cells[cellIndex].children[0].style.width = '';
+        if (tbl) {
+            for (var rowIndex = 0; rowIndex < tbl.rows.length; rowIndex++) {
+                var row = tbl.rows[rowIndex];
+                for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
+                    row.cells[cellIndex].children[0].style.width = '';
+                }
             }
+            tbl.style.width = '';
         }
-        tbl.style.width = '';
     }
-}
-/** @jsx React.DOM */
+    /** @jsx React.DOM */
 
 /* global module, require, React */
 
@@ -774,8 +770,6 @@ module.exports.PivotCell = react.createClass({
         switch (cell.template) {
             case 'cell-template-row-header':
             case 'cell-template-column-header':
-                //console.log(cell.value, cell)
-                value = (cell.datafield && cell.datafield.formatFunc) ? cell.datafield.formatFunc()(cell.value) : cell.value;
                 var isWrapper = cell.type === uiheaders.HeaderType.WRAPPER && cell.dim.field.subTotal.visible && cell.dim.field.subTotal.collapsible;
                 var isSubtotal = cell.type === uiheaders.HeaderType.SUB_TOTAL && !cell.expanded;
                 if (isWrapper || isSubtotal) {
@@ -796,20 +790,18 @@ module.exports.PivotCell = react.createClass({
                                     className: "hdr-val"
                                 }, React.createElement("div", {
                                     dangerouslySetInnerHTML: {
-                                        __html: '' + value || '&#160;'
+                                        __html: cell.value || '&#160;'
                                     }
                                 })))
                         )));
                 } else {
-                    //value = ('' + cell.value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' Total' : '');
-                    value = ('' + value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' 小计' : '');
+                    value = (cell.value || '&#160;') + (cell.type === uiheaders.HeaderType.SUB_TOTAL ? ' Total' : '');
                 }
                 break;
             case 'cell-template-dataheader':
                 value = cell.value.caption;
                 break;
             case 'cell-template-datavalue':
-                //console.info(cell.value, cell)
                 value = (cell.datafield && cell.datafield.formatFunc) ? cell.datafield.formatFunc()(cell.value) : cell.value;
                 cellClick = function() {
                     self.props.pivotTableComp.pgridwidget.drilldown(cell, self.props.pivotTableComp.id);
@@ -855,38 +847,38 @@ module.exports.PivotCell = react.createClass({
 });
 
 function getClassname(compProps) {
-    var cell = compProps.cell;
-    var classname = cell.cssclass;
-    var isEmpty = cell.template === 'cell-template-empty';
+        var cell = compProps.cell;
+        var classname = cell.cssclass;
+        var isEmpty = cell.template === 'cell-template-empty';
 
-    if (!cell.visible()) {
-        classname += ' cell-hidden';
-    }
-
-    if (cell.type === uiheaders.HeaderType.SUB_TOTAL && cell.expanded) {
-        classname += ' header-st-exp';
-    }
-
-    if (cell.type === uiheaders.HeaderType.GRAND_TOTAL) {
-        if (cell.dim.depth === 1) {
-            classname += ' header-nofields';
-        } else if (cell.dim.depth > 2) {
-            classname += ' header-gt-exp';
+        if (!cell.visible()) {
+            classname += ' cell-hidden';
         }
-    }
 
-    if (compProps.leftmost) {
-        classname += ' ' + (cell.template === 'cell-template-datavalue' ? 'cell' : 'header') + '-leftmost';
-    }
+        if (cell.type === uiheaders.HeaderType.SUB_TOTAL && cell.expanded) {
+            classname += ' header-st-exp';
+        }
 
-    if (compProps.topmost) {
-        classname += ' cell-topmost';
-    }
+        if (cell.type === uiheaders.HeaderType.GRAND_TOTAL) {
+            if (cell.dim.depth === 1) {
+                classname += ' header-nofields';
+            } else if (cell.dim.depth > 2) {
+                classname += ' header-gt-exp';
+            }
+        }
 
-    return classname;
-}
-/* global module, require, react, reactUtils */
-/*jshint eqnull: true*/
+        if (compProps.leftmost) {
+            classname += ' ' + (cell.template === 'cell-template-datavalue' ? 'cell' : 'header') + '-leftmost';
+        }
+
+        if (compProps.topmost) {
+            classname += ' cell-topmost';
+        }
+
+        return classname;
+    }
+    /* global module, require, react, reactUtils */
+    /*jshint eqnull: true*/
 
 'use strict';
 
@@ -1281,7 +1273,6 @@ module.exports.PivotButton = react.createClass({
         filterContainer.className = this.props.pivotTableComp.pgrid.config.theme.getFilterClasses().container;
         filterContainer.style.top = filterButtonPos.y + 'px';
         filterContainer.style.left = filterButtonPos.x + 'px';
-        filterContainer.style.zIndex = 1;
         document.body.appendChild(filterContainer);
 
         React.render(filterPanel, filterContainer);
@@ -1325,7 +1316,7 @@ module.exports.PivotButton = react.createClass({
                 mousedown: true,
                 mouseoffset: {
                     x: thispos.x - e.pageX,
-                    y: thispos.y - e.pageY
+                    y: thispos.y - e.pageY,
                 },
                 startpos: {
                     x: e.pageX,
@@ -2111,7 +2102,7 @@ module.exports.FilterPanel = react.createClass({
                             className: buttonClass,
                             value: "Ok",
                             style: {
-                                'float': 'left'
+                                float: 'left'
                             }
                         }),
                         React.createElement("input", {
@@ -2119,7 +2110,7 @@ module.exports.FilterPanel = react.createClass({
                             className: buttonClass,
                             value: "Cancel",
                             style: {
-                                'float': 'left'
+                                float: 'left'
                             }
                         })
                     ),
@@ -2834,9 +2825,6 @@ module.exports.Toolbar = react.createClass({
 });
 
 var excelExport = require('../orb.export.excel');
-//module.exports.Export = {
-//    'excelExport': excelExport
-//};
 
 var defaultToolbarConfig = {
     exportToExcel: function(pgridComponent, button) {
@@ -2979,4 +2967,4 @@ defaultToolbarConfig.buttons = [{
     tooltip: 'Export to Excel',
     cssClass: 'export-xls',
     action: defaultToolbarConfig.exportToExcel
-}];
+}, ];

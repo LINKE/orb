@@ -110,7 +110,10 @@ var docFooter = '</body></html>';
  			}
 
  			rowStr += currRow.reduce(function(tr, header) {
- 				var value = header.type === uiheaders.HeaderType.DATA_HEADER ? header.value.caption : header.value;
+ 				var value = header.type === uiheaders.HeaderType.DATA_HEADER ? header.value.caption : //header.value;
+ 				   ((header.datafield && header.datafield.formatFunc) ? header.datafield.formatFunc()(header.value) : header.value);
+ 				header.type === uiheaders.HeaderType.SUB_TOTAL && (value += ' 小计');
+ 				//console.log(value, header.type, header)
  				return (tr += '<td ' + headerStyle + ' colspan="' + header.hspan(true) + '" rowspan="' + header.vspan(true) + '">' + value + '</td>');
  			}, '');
  			str += rowStr + '</tr>';
@@ -125,7 +128,10 @@ var docFooter = '</body></html>';
  			var currRow = pgridwidget.rows.headers[i];
  			var rowStr = '<tr>';
  			rowStr += currRow.reduce(function(tr, header) {
- 				return (tr += '<td ' + headerStyle + ' colspan="' + header.hspan(true) + '" rowspan="' + header.vspan(true) + '">' + header.value + '</td>');
+ 				  var value = (header.datafield && header.datafield.formatFunc) ? header.datafield.formatFunc()(header.value) : header.value;
+ 				  header.type === uiheaders.HeaderType.SUB_TOTAL && (value += ' 小计');
+ 				  //console.log(value, header.value, header)
+ 				  return (tr += '<td ' + headerStyle + ' colspan="' + header.hspan(true) + '" rowspan="' + header.vspan(true) + '">' + value + '</td>');
  			}, '');
  			var dataRow = pgridwidget.dataRows[i];
  			rowStr += dataRow.reduce(function(tr, dataCell, index) {
@@ -139,7 +145,8 @@ var docFooter = '</body></html>';
  	}());
 
  	function toBase64(str) {
- 		return utils.btoa(unescape(encodeURIComponent(str)));
+ 		return str;
+ 		//return utils.btoa(unescape(encodeURIComponent(str)));
  	}
 
  	return uriHeader +

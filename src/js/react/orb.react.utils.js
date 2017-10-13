@@ -92,12 +92,14 @@ module.exports.updateTableColGroup = function(tableNode, widths) {
 		    tableNode.style.tableLayout = 'auto';
 		    tableNode.style.width = '';
 
-		    colGroupNode.innerHTML = '';
-		    for(var i = 0; i < widths.length; i++) {
-		      var col = document.createElement('col');
-		      col.style.width = widths[i] + 'px';
-		      colGroupNode.appendChild(col);
-		    }
+		    try {
+		      colGroupNode.innerHTML = '';
+		      for(var i = 0; i < widths.length; i++) {
+		          var col = document.createElement('col');
+		          col.style.width = widths[i] + 'px';
+		          colGroupNode.appendChild(col);
+		      }
+		    } catch(e) {}
 		    tableNode.style.tableLayout = 'fixed';
 		}
 	}

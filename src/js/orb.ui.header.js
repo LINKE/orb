@@ -150,7 +150,7 @@ module.exports.header = function(axetype, headerType, dim, parent, datafieldscou
 
     switch (headerType) {
         case HeaderType.GRAND_TOTAL:
-            value = 'Grand Total';
+            value = '总计';//'Grand Total';
             hspan = isRowsAxe ? dim.depth - 1 || 1 : datafieldscount;
             vspan = isRowsAxe ? datafieldscount : dim.depth - 1 || 1;
             break;
@@ -165,6 +165,8 @@ module.exports.header = function(axetype, headerType, dim, parent, datafieldscou
             vspan = isRowsAxe ? null : 1;
             break;
     }
+
+    this.datafield = dim.field;
 
     CellBase.call(this, {
         axetype: axetype,
@@ -325,6 +327,6 @@ module.exports.emptyCell = function(hspan, vspan) {
         },
         vspan: function() {
             return vspan;
-        },
+        }
     });
 };

@@ -167,6 +167,7 @@ module.exports.PivotTable = react.createClass({
       nodes.rowHeadersTable.size = reactUtils.getSize(nodes.rowHeadersTable.node);
 
       // get row buttons container width
+      //nodes.rowButtonsContainer.node.style.width = '';
       var rowButtonsContainerWidth = reactUtils.getSize(nodes.rowButtonsContainer.node.children[0]).width;
 
       // get array of dataCellsTable column widths
@@ -192,6 +193,9 @@ module.exports.PivotTable = react.createClass({
         nodes.rowHeadersTable.size.width += rowDiff;
         nodes.rowHeadersTable.widthArray[nodes.rowHeadersTable.widthArray.length - 1] += rowDiff;
       }
+      
+      //nodes.rowButtonsContainer.node.style.width = (rowHeadersTableWidth + 1) + 'px';
+      //nodes.rowButtonsContainer.node.style.paddingRight = (rowHeadersTableWidth + 1 - rowButtonsContainerWidth + 17) + 'px';
 
       // Set dataCellsTable cells widths according to the computed dataCellsTableMaxWidthArray
       reactUtils.updateTableColGroup(nodes.dataCellsTable.node, dataCellsTableMaxWidthArray);
@@ -202,17 +206,21 @@ module.exports.PivotTable = react.createClass({
       // Set rowHeadersTable cells widths
       reactUtils.updateTableColGroup(nodes.rowHeadersTable.node, nodes.rowHeadersTable.widthArray);
 
-      nodes.dataCellsTable.node.style.width = dataCellsTableMaxWidth + 'px';
-      nodes.colHeadersTable.node.style.width = dataCellsTableMaxWidth + 'px';
-      nodes.rowHeadersTable.node.style.width = rowHeadersTableWidth + 'px';
-
+      try {
+        nodes.dataCellsTable.node.style.width = dataCellsTableMaxWidth + 'px';
+        nodes.colHeadersTable.node.style.width = dataCellsTableMaxWidth + 'px';
+        nodes.rowHeadersTable.node.style.width = rowHeadersTableWidth + 'px';
+      } catch(e) {}
+      
       var dataCellsContainerWidth = Math.min(
         dataCellsTableMaxWidth + 1, 
         nodes.pivotContainer.size.width - rowHeadersTableWidth - nodes.verticalScrollBar.size.width);
 
       // Adjust data cells container width
-      nodes.dataCellsContainer.node.style.width = dataCellsContainerWidth + 'px';
-      nodes.colHeadersContainer.node.style.width = dataCellsContainerWidth + 'px';
+      try {
+        nodes.dataCellsContainer.node.style.width = dataCellsContainerWidth + 'px';
+        nodes.colHeadersContainer.node.style.width = dataCellsContainerWidth + 'px';
+      } catch(e) {}
 
     var pivotContainerHeight = this.pgridwidget.pgrid.config.height;
 
@@ -295,7 +303,7 @@ module.exports.PivotTable = react.createClass({
             <td colSpan="2"></td>
           </tr>
           <tr>
-            <td style={{ position: 'relative'}}>
+            <td style={{ position: 'relative' }}>
               <PivotTableRowButtons pivotTableComp={self} ref="rowButtonsContainer"></PivotTableRowButtons>
             </td>
             <td>
